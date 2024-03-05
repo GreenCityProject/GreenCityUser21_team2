@@ -11,7 +11,7 @@ public class LanguageMapper extends AbstractConverter<String, Long> {
         switch (lang) {
             case "ua":
                 return 1L;
-            case "ru":
+            case "fr":
                 return 3L;
             case "en":
                 return 2L;

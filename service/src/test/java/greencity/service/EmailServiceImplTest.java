@@ -101,7 +101,7 @@ class EmailServiceImplTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"1, Test, test@gmail.com, token, ru",
+    @CsvSource(value = {"1, Test, test@gmail.com, token, fr",
         "1, Test, test@gmail.com, token, ua",
         "1, Test, test@gmail.com, token, en"})
     void sendVerificationEmail(Long id, String name, String email, String token, String language) {
@@ -122,7 +122,7 @@ class EmailServiceImplTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"1, Test, test@gmail.com, token, ru, true",
+    @CsvSource(value = {"1, Test, test@gmail.com, token, fr, true",
         "1, Test, test@gmail.com, token, ua, false",
         "1, Test, test@gmail.com, token, en, false"})
     void sendRestoreEmail(Long id, String name, String email, String token, String language, Boolean isUbs) {

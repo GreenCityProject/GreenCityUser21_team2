@@ -3,7 +3,7 @@ package greencity.constant;
 public final class UpdateConstants {
     public static final String SUCCESS_UA = "Користувача успішно оновлено.";
     public static final String SUCCESS_EN = "User successfully updated.";
-    public static final String SUCCESS_RU = "Пользователь успешно обновлен.";
+    public static final String SUCCESS_FR = "L'utilisateur a été mis à jour avec succès.";
 
     private UpdateConstants() {
     }
@@ -16,8 +16,8 @@ public final class UpdateConstants {
     public static String getResultByLanguageCode(String code) {
         if (code.equals("ua")) {
             return SUCCESS_UA;
-        } else if (code.equals("ru")) {
-            return SUCCESS_RU;
+        } else if (code.equals("fr")) {
+            return SUCCESS_FR;
         } else {
             return SUCCESS_EN;
         }
