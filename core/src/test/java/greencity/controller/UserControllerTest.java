@@ -25,10 +25,7 @@ import greencity.repository.UserRepo;
 import greencity.service.UserService;
 import java.security.Principal;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +36,7 @@ import org.mockito.Mock;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -287,7 +285,7 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteUserProfilePictureTest() throws Exception {
+    void deleteUserProfilePicture_validPrincipal_Ok() throws Exception {
         Principal principal = mock(Principal.class);
         when(principal.getName()).thenReturn("test@email.com");
         mockMvc.perform(patch(userLink + "/deleteProfilePicture")
@@ -295,6 +293,14 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         verify(userService, times(1)).deleteUserProfilePicture("test@email.com");
+    }
+
+    @Test
+    void deleteUserProfilePicture_NoPrincipal_Unauthorized() throws Exception {
+        mockMvc.perform(patch(userLink + "/deleteProfilePicture"))
+                .andExpect(status().isUnauthorized());
+
+        verify(userService, never()).deleteUserProfilePicture("test@email.com");
     }
 
     @Test
