@@ -449,8 +449,12 @@ public class UserController {
     @GetMapping("/findUserForManagement")
     @ApiPageable
     public ResponseEntity<PageableAdvancedDto<UserManagementDto>> findUserForManagementByPage(
-        @ApiIgnore Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findUserForManagementByPage(pageable));
+            @ApiIgnore Pageable pageable) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.findUserForManagementByPage(pageable));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     /**
