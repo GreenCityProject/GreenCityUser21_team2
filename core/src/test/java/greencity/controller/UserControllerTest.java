@@ -287,6 +287,22 @@ class UserControllerTest {
     }
 
     @Test
+    void updateUserProfilePicture_AuthenticatedPrincipal_Ok() throws Exception {
+        UserVO user = ModelUtils.getUserVO();
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("testmail@gmail.com");
+        when(userService.updateUserProfilePicture(null, "testmail@gmail.com",
+                "data:image/png;base64,iVBORw0KGgoANSUhEUgA4AAORK5CYII=")).thenReturn(user);
+
+        this.mockMvc.perform(patch(userLink + "/profilePicture")
+                .principal(principal)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"base64\": \"data:image/png;base64,iVBORw0KGgoANSUhEUgA4AAORK5CYII=\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void deleteUserProfilePictureTest() throws Exception {
         Principal principal = mock(Principal.class);
         when(principal.getName()).thenReturn("test@email.com");
