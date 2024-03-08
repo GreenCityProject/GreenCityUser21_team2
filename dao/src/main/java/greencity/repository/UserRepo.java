@@ -138,7 +138,7 @@ public interface UserRepo extends JpaRepository<User, Long>, JpaSpecificationExe
      * @author Vasyl Zhovnir
      **/
     @Modifying
-    @Query(nativeQuery = true, value = "DELETE FROM users where status = 1 "
+    @Query(nativeQuery = true, value = "DELETE FROM users where user_status = 1 "
         + "AND last_activity_time + interval '2 year' <= CURRENT_TIMESTAMP")
     int scheduleDeleteDeactivatedUsers();
 
