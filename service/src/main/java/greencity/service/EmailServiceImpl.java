@@ -228,6 +228,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void sendEmail(String receiverEmail, String subject, String content) {
+        checkReceiverEmailIsCorrect(receiverEmail);
         log.info(LogMessage.IN_SEND_EMAIL, receiverEmail, subject);
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
@@ -240,6 +241,11 @@ public class EmailServiceImpl implements EmailService {
             log.error(e.getMessage());
         }
         executor.execute(() -> javaMailSender.send(mimeMessage));
+    }
+
+    private void checkReceiverEmailIsCorrect(String receiverEmail) {
+        if (!userRepo.existsUserByEmail(receiverEmail))
+            throw new NotFoundException(ErrorMessage.RECEIVER_NOT_FOUND_BY_EMAIL + receiverEmail);
     }
 
     @Override
