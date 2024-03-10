@@ -26,7 +26,7 @@ class CustomSpecificationTest {
     @Mock
     private Path<Object> objectPathExpected;
     @Mock
-    private Expression<Integer> as;
+    private Expression<String> as;
     List<SearchCriteria> searchCriteriaList;
     UserSpecification userSpecification;
 
@@ -100,7 +100,7 @@ class CustomSpecificationTest {
     void getEnumPredicate() {
         when(criteriaBuilder.conjunction()).thenReturn(expected);
         when(root.get(searchCriteriaList.get(5).getKey())).thenReturn(objectPathExpected);
-        when(objectPathExpected.as(Integer.class)).thenReturn(as);
+        when(objectPathExpected.as(String.class)).thenReturn(as);
         when(criteriaBuilder.equal(as, searchCriteriaList.get(5).getValue())).thenReturn(expected);
         Predicate actual = userSpecification.getEnumPredicate(root, criteriaBuilder, searchCriteriaList.get(5));
         assertEquals(expected, actual);
