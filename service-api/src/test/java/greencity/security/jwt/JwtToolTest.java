@@ -6,9 +6,8 @@ import greencity.enums.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+
+import java.util.*;
 import javax.crypto.SecretKey;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -59,12 +58,12 @@ class JwtToolTest {
         assertEquals(expectedEmail, actualEmail);
         @SuppressWarnings({"unchecked, rawtype"})
         List<String> authorities = (List<String>) Jwts.parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(accessToken)
-            .getPayload()
-            .get(ROLE);
-        assertEquals(expectedRole, Role.valueOf(authorities.getFirst()));
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(accessToken)
+                .getPayload()
+                .get(ROLE);
+        assertEquals(expectedRole, Role.valueOf(authorities.get(0)));
     }
 
     @Test
@@ -85,12 +84,12 @@ class JwtToolTest {
         assertEquals(expectedEmail, actualEmail);
         @SuppressWarnings({"unchecked, rawtype"})
         List<String> authorities = (List<String>) Jwts.parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(refreshToken)
-            .getPayload()
-            .get(ROLE);
-        assertEquals(expectedRole, Role.valueOf(authorities.getFirst()));
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(refreshToken)
+                .getPayload()
+                .get(ROLE);
+        assertEquals(expectedRole, Role.valueOf(authorities.get(0)));
     }
 
     @Test
