@@ -70,6 +70,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVO save(UserVO userVO) {
         User user = modelMapper.map(userVO, User.class);
+        user.setLanguage(Language.builder()
+                .id(userVO.getLanguageVO().getId())
+                .code(userVO.getLanguageVO().getCode())
+                .build());
         return modelMapper.map(userRepo.save(user), UserVO.class);
     }
 

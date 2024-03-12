@@ -704,7 +704,11 @@ public class UserController {
     })
     @PostMapping()
     public ResponseEntity<UserVO> saveUser(@RequestBody @CurrentUser UserVO userVO) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.save(userVO));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.save(userVO));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     /**
