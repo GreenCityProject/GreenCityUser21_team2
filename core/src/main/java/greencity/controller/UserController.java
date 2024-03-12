@@ -459,7 +459,7 @@ public class UserController {
      * @return {@link UserUpdateDto}.
      * @author Orest Mamchuk
      */
-    @Operation(summary = "Get User by id")
+    @Operation(summary = "Get User by query")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = HttpStatuses.OK),
         @ApiResponse(responseCode = "400", description = HttpStatuses.BAD_REQUEST),
@@ -531,7 +531,7 @@ public class UserController {
      * @return {@link Long}.
      * @author Orest Mamchuk
      */
-    @Operation(summary = "Get User by id")
+    @Operation(summary = "Get User id by email")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = HttpStatuses.OK),
         @ApiResponse(responseCode = "400", description = HttpStatuses.BAD_REQUEST),
