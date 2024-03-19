@@ -453,6 +453,26 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findUserForManagementByPage(pageable));
     }
 
+    /**
+     * Method that allow you to find {@link UserVO} by query.
+     *
+     * @return {@link UserUpdateDto}.
+     * @author Orest Mamchuk
+     */
+    @Operation(summary = "Get User by query")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = HttpStatuses.OK),
+        @ApiResponse(responseCode = "400", description = HttpStatuses.BAD_REQUEST),
+        @ApiResponse(responseCode = "401", description = HttpStatuses.UNAUTHORIZED),
+        @ApiResponse(responseCode = "403", description = HttpStatuses.FORBIDDEN)
+    })
+    @GetMapping("/searchBy")
+    @ApiPageable
+    public ResponseEntity<PageableAdvancedDto<UserManagementDto>> searchBy(
+        @RequestParam(required = false, name = "query") String query,
+        @ApiIgnore Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.searchBy(pageable, query));
+    }
 
     /**
      * Method that updates user data.
