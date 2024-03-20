@@ -1,5 +1,7 @@
 package greencity.mapping;
 
+import static java.util.Objects.*;
+
 import greencity.dto.language.LanguageVO;
 import greencity.dto.ownsecurity.OwnSecurityVO;
 import greencity.dto.user.UserVO;
@@ -47,10 +49,14 @@ public class UserVOMapper extends AbstractConverter<User, UserVO> {
             .showEcoPlace(user.getShowEcoPlace())
             .showLocation(user.getShowLocation())
             .lastActivityTime(user.getLastActivityTime())
-            .languageVO(LanguageVO.builder()
+            .languageVO(nonNull(user.getLanguage()) ? getLanguage(user) : null)
+            .build();
+    }
+
+    private LanguageVO getLanguage(User user) {
+        return LanguageVO.builder()
                 .id(user.getLanguage().getId())
                 .code(user.getLanguage().getCode())
-                .build())
-            .build();
+                .build();
     }
 }
