@@ -10,6 +10,7 @@ import greencity.security.service.GoogleSecurityService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     private final GoogleSecurityService googleSecurityService;
@@ -27,9 +29,10 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response, Authentication auth) throws IOException {
         checkAuthenticationIsNotNull(auth);
-        System.out.println(auth.getPrincipal());
         var googleUser = GoogleUserDto.buildFromOAuth2User((DefaultOAuth2User) auth.getPrincipal());
         var successSignIn = googleSecurityService.authenticateWithGoogle(googleUser);
+
+        log.info("User {} is authenticated using Google provider", googleUser);
 
         response.sendRedirect(format(SUCCESS_AUTH_REDIRECT_URL,successSignIn.getAccessToken(),successSignIn.getRefreshToken()));
     }
