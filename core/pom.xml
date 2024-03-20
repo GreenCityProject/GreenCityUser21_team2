@@ -15,7 +15,6 @@
         <springfox-bean-validators.version>2.9.2</springfox-bean-validators.version>
         <jjwt.version>0.12.3</jjwt.version>
         <modelmapper.version>3.2.0</modelmapper.version>
-        <mockito-junit-jupiter.version>3.3.3</mockito-junit-jupiter.version>
     </properties>
 
     <artifactId>core</artifactId>
@@ -138,12 +137,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>

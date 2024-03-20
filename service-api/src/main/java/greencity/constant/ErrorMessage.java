@@ -30,6 +30,7 @@ public final class ErrorMessage {
     public static final String USER_BLOCKED = "User is blocked";
     public static final String USER_CREATED = "User is not activated";
     public static final String USER_EMAIL_IS_NOT_VERIFIED = "The user's email address has not been verified.";
+    public static final String GOOGLE_AUTHENTICATION_FAILURE = "Google authentication failed.";
 
     public static final String INCORRECT_PASSWORD = "Incorrect password";
 
