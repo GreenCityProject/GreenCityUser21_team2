@@ -1,11 +1,5 @@
 package greencity.security.service;
 
-import static greencity.constant.ErrorMessage.*;
-import static greencity.enums.UserStatus.ACTIVATED;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-
 import greencity.dto.user.UserVO;
 import greencity.entity.User;
 import greencity.enums.EmailNotification;
@@ -14,7 +8,7 @@ import greencity.enums.UserStatus;
 import greencity.exception.exceptions.BadUserStatusException;
 import greencity.repository.UserRepo;
 import greencity.security.dto.SuccessSignInDto;
-import greencity.security.dto.googlesecurity.GoogleUserDto;
+import greencity.security.dto.oauth2security.CustomUserDto;
 import greencity.security.jwt.JwtTool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,13 +24,25 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+import static greencity.constant.ErrorMessage.USER_BLOCKED;
+import static greencity.constant.ErrorMessage.USER_CREATED;
+import static greencity.constant.ErrorMessage.USER_DEACTIVATED;
+import static greencity.enums.UserStatus.ACTIVATED;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
-public class GoogleSecurityServiceImplTest {
+class CustomSecurityServiceImplTest {
+
     private final String accessToken = "access";
     private final String refreshToken = "refresh";
 
     @InjectMocks
-    private GoogleSecurityServiceImpl googleSecurityService;
+    private CustomSecurityServiceImpl googleSecurityService;
 
     @Mock
     private UserRepo userRepo;
@@ -46,13 +52,13 @@ public class GoogleSecurityServiceImplTest {
     private ModelMapper modelMapper;
 
     private User user;
-    private GoogleUserDto googleUser;
+    private CustomUserDto customUserDto;
     private UserVO userVO;
     private SuccessSignInDto expected;
 
     @BeforeEach
     void setUp() {
-        googleUser = setUpGoogleUser();
+        customUserDto = setUpCustomUserDto();
         user = setUpUser();
         userVO = setUpUserVO(user);
         expected = setUpExpectedSuccessSignIn(userVO);
@@ -73,14 +79,14 @@ public class GoogleSecurityServiceImplTest {
         when(jwtTool.createAccessToken(userVO.getEmail(), userVO.getRole())).thenReturn(accessToken);
         when(jwtTool.createRefreshToken(userVO)).thenReturn(refreshToken);
 
-        var actual = googleSecurityService.authenticateWithGoogle(googleUser);
+        var actual = googleSecurityService.authenticate(customUserDto);
         assertEquals(expected, actual);
     }
 
     @ParameterizedTest
     @NullSource
-    void authenticateWithGoogle_whenGoogleUserIsNull_expectNullPointer(GoogleUserDto googleUser) {
-        assertThrows(NullPointerException.class, () -> googleSecurityService.authenticateWithGoogle(googleUser));
+    void authenticateWithGoogle_whenGoogleUserIsNull_expectNullPointer(CustomUserDto googleUser) {
+        assertThrows(NullPointerException.class, () -> googleSecurityService.authenticate(googleUser));
     }
 
 
@@ -92,7 +98,7 @@ public class GoogleSecurityServiceImplTest {
         when(jwtTool.createAccessToken(userVO.getEmail(), userVO.getRole())).thenReturn(accessToken);
         when(jwtTool.createRefreshToken(userVO)).thenReturn(refreshToken);
 
-        var actual = googleSecurityService.authenticateWithGoogle(googleUser);
+        var actual = googleSecurityService.authenticate(customUserDto);
         assertEquals(expected, actual);
     }
 
@@ -102,7 +108,8 @@ public class GoogleSecurityServiceImplTest {
 
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        var badRequestException = assertThrows(BadUserStatusException.class, () -> googleSecurityService.authenticateWithGoogle(googleUser));
+        var badRequestException =
+                assertThrows(BadUserStatusException.class, () -> googleSecurityService.authenticate(customUserDto));
         assertEquals(USER_BLOCKED, badRequestException.getMessage());
 
     }
@@ -113,7 +120,8 @@ public class GoogleSecurityServiceImplTest {
 
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        var badRequestException = assertThrows(BadUserStatusException.class, () -> googleSecurityService.authenticateWithGoogle(googleUser));
+        var badRequestException =
+                assertThrows(BadUserStatusException.class, () -> googleSecurityService.authenticate(customUserDto));
         assertEquals(USER_CREATED, badRequestException.getMessage());
 
     }
@@ -124,14 +132,15 @@ public class GoogleSecurityServiceImplTest {
 
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        var badRequestException = assertThrows(BadUserStatusException.class, () -> googleSecurityService.authenticateWithGoogle(googleUser));
+        var badRequestException =
+                assertThrows(BadUserStatusException.class, () -> googleSecurityService.authenticate(customUserDto));
         assertEquals(USER_DEACTIVATED, badRequestException.getMessage());
 
     }
 
 
-    private GoogleUserDto setUpGoogleUser() {
-        return new GoogleUserDto("name", "firstName",
+    private CustomUserDto setUpCustomUserDto() {
+        return new CustomUserDto("name", "firstName",
                 "email", "picture", "uk");
     }
 

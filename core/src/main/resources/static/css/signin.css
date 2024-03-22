@@ -71,6 +71,14 @@
     content: url(../img/google.png);
     float: left;
 }
+.facebook-icon{
+    margin-left: 9px;
+    margin-bottom: 6px;
+    width: 26px;
+    height: 26px;
+    content: url(../img/facebook.png);
+    float: left;
+}
 
 
 

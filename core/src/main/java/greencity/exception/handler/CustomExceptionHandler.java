@@ -292,7 +292,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         List<ValidationExceptionDto> collect =
             ex.getBindingResult().getFieldErrors().stream()
                 .map(ValidationExceptionDto::new)
-                .collect(Collectors.toList());
+                .toList();
         log.trace(ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(collect);
     }
@@ -375,9 +375,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
     }
 
-    @ExceptionHandler(GoogleAuthenticationFailureException.class)
-    public final ResponseEntity<Object> handleGoogleAuthenticationFailureException(
-            GoogleAuthenticationFailureException exception, WebRequest request) {
+    @ExceptionHandler(AuthenticationFailureException.class)
+    public final ResponseEntity<Object> handleAuthenticationFailureException(
+            AuthenticationFailureException exception, WebRequest request) {
         log.error(exception.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(getErrorAttributes(request));
 
