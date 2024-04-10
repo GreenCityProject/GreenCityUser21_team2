@@ -15,7 +15,7 @@ import greencity.enums.UserStatus;
 import greencity.exception.exceptions.BadUserStatusException;
 import greencity.repository.UserRepo;
 import greencity.security.dto.SuccessSignInDto;
-import greencity.security.dto.googlesecurity.GoogleUserDto;
+import greencity.security.dto.oauth2security.CustomUserDto;
 import greencity.security.jwt.JwtTool;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -29,7 +29,8 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class GoogleSecurityServiceImpl implements GoogleSecurityService {
+public class CustomSecurityServiceImpl implements CustomSecurityService {
+
     private final UserRepo userRepo;
     private final JwtTool jwtTool;
     private final ModelMapper modelMapper;
@@ -37,11 +38,11 @@ public class GoogleSecurityServiceImpl implements GoogleSecurityService {
     @SneakyThrows
     @Transactional
     @Override
-    public SuccessSignInDto authenticateWithGoogle(GoogleUserDto googleUser) {
-        var optionalUser = getOptionalUserByEmail(googleUser.email());
+    public SuccessSignInDto authenticate(CustomUserDto customUserDto) {
+        var optionalUser = getOptionalUserByEmail(customUserDto.email());
 
         return optionalUser.map(this::authenticateUser)
-                .orElseGet(() -> registerUser(googleUser));
+                .orElseGet(() -> registerUser(customUserDto));
     }
 
     private Optional<User> getOptionalUserByEmail(String email){
@@ -65,17 +66,17 @@ public class GoogleSecurityServiceImpl implements GoogleSecurityService {
         }
     }
 
-    private SuccessSignInDto registerUser(GoogleUserDto googleUser) {
+    private SuccessSignInDto registerUser(CustomUserDto googleUser) {
         var registeredUser = registerNewUser(googleUser);
         return signIn(mapToUserVO(registeredUser));
     }
 
-    private User registerNewUser(GoogleUserDto googleUser) {
+    private User registerNewUser(CustomUserDto googleUser) {
         var newUser = createUser(googleUser);
         return userRepo.save(newUser);
     }
 
-    private User createUser(GoogleUserDto googleUser) {
+    private User createUser(CustomUserDto googleUser) {
         return User.builder()
                 .name(googleUser.name())
                 .firstName(googleUser.firstName())
@@ -98,7 +99,7 @@ public class GoogleSecurityServiceImpl implements GoogleSecurityService {
                 .build();
     }
 
-    private String getLanguageCode(GoogleUserDto googleUser){
+    private String getLanguageCode(CustomUserDto googleUser){
         return (nonNull(googleUser.locale()) && googleUser.locale().equals(GoogleConstants.GOOGLE_UKRAINIAN_LANGUAGE_CODE))?
                 AppConstant.UKRAINIAN_LANGUAGE_CODE : AppConstant.DEFAULT_LANGUAGE_CODE;
     }
