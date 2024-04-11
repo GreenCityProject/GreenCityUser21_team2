@@ -2,6 +2,7 @@ package greencity.constant;
 
 public final class ValidationConstants {
     public static final String INVALID_EMAIL = "{greenCity.validation.invalid.email}";
+
     public static final String USERNAME_MESSAGE =
         "The name ${validatedValue} cannot be empty, "
             + "starts with a number or not a capital letter, "
@@ -10,7 +11,7 @@ public final class ValidationConstants {
             + "Use English or Ukrainian letters, "
             + "no longer than 30 symbols, "
             + "the name ${validatedValue} could contain numbers, symbols '’, "
-            + "dot in the middle of the name, dash and whitespaces.";
+            + "dot in the middle of the name and dash.";
 
     public static final String USER_CREATED = "{greenCity.validation.user.created}";
     public static final int CATEGORY_NAME_MIN_LENGTH = 3;
@@ -20,7 +21,7 @@ public final class ValidationConstants {
     public static final String USERNAME_REGEXP =
         "^(?!.*\\.\\.)(?!.*\\.$)(?!.*\\-\\-)"
             + "(?=[ЄІЇҐЁА-ЯA-Z])"
-            + "[ЄІЇҐЁєіїґёА-Яа-яA-Za-z0-9\\s-'’.\\\"]"
+            + "[ЄІЇҐЁєіїґёА-Яа-яA-Za-z0-9-'’.\\\"]"
             + "{1,30}"
             + "(?<![ЭэЁёъЪЫы])$";
 
