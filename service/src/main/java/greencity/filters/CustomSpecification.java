@@ -36,7 +36,7 @@ public interface CustomSpecification<T> extends Specification<T> {
     default Predicate getEnumPredicate(Root<T> root, CriteriaBuilder criteriaBuilder,
         SearchCriteria searchCriteria) {
         return searchCriteria.getValue().toString().trim().equals("") ? criteriaBuilder.conjunction()
-            : criteriaBuilder.equal(root.get(searchCriteria.getKey()).as(Integer.class),
+            : criteriaBuilder.equal(root.get(searchCriteria.getKey()).as(String.class),
                 searchCriteria.getValue());
     }
 }

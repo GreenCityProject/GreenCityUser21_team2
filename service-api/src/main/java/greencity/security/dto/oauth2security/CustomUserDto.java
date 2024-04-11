@@ -16,6 +16,7 @@ public record CustomUserDto(String name, String firstName, String email, String 
         );
     }
 
+
     private static String extractUsernameFromEmail(String email){
         return nonNull(email)? email.split("@")[0] : null;
     }
