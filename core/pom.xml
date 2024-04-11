@@ -167,13 +167,11 @@
             <version>2.2</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
@@ -227,5 +225,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
