@@ -30,6 +30,8 @@ public final class ErrorMessage {
     public static final String USER_BLOCKED = "User is blocked";
     public static final String USER_CREATED = "User is not activated";
     public static final String USER_EMAIL_IS_NOT_VERIFIED = "The user's email address has not been verified.";
+    public static final String NOT_CURRENT_USER = "You can't perform actions with the data of other user.";
+    public static final String USER_NOT_AUTHENTICATED = "The user is not authenticated.";
 
     public static final String INCORRECT_PASSWORD = "Incorrect password";
 
