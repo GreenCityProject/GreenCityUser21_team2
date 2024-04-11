@@ -383,4 +383,20 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
     }
+  
+    @ExceptionHandler(NotCurrentUserException.class)
+    public final ResponseEntity<Object> handleNotCurrentUserException(
+            NotCurrentUserException exception, WebRequest request) {
+        log.error(exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(UserNotAuthenticatedException.class)
+    public final ResponseEntity<Object> handleUserNotAuthenticatedException(
+            UserNotAuthenticatedException exception, WebRequest request) {
+        log.error(exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    }
 }

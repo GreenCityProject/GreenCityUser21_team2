@@ -54,6 +54,11 @@ public class UserVOMapper extends AbstractConverter<User, UserVO> {
     }
 
     private LanguageVO getLanguage(User user) {
+            .languageVO(nonNull(user.getLanguage()) ? getUserLanguage(user): null)
+            .build();
+    }
+
+    private LanguageVO getUserLanguage(User user) {
         return LanguageVO.builder()
                 .id(user.getLanguage().getId())
                 .code(user.getLanguage().getCode())

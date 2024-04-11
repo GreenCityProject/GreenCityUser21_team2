@@ -4,6 +4,7 @@ import greencity.annotations.ApiPageable;
 import greencity.annotations.CurrentUser;
 import greencity.annotations.CurrentUserId;
 import greencity.annotations.ImageValidation;
+import greencity.config.SwaggerExampleModel;
 import greencity.constant.HttpStatuses;
 import greencity.dto.PageableAdvancedDto;
 import greencity.dto.PageableDto;
@@ -158,7 +159,7 @@ public class UserController {
     @Operation(summary = "Get all available email notifications statuses")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = HttpStatuses.OK,
-            content = @Content(schema = @Schema(implementation = EmailNotification[].class))),
+            content = @Content(schema = @Schema(example = SwaggerExampleModel.EMAIL_NOTIFICATION_CONSTANTS))),
         @ApiResponse(responseCode = "303", description = HttpStatuses.SEE_OTHER),
         @ApiResponse(responseCode = "400", description = HttpStatuses.BAD_REQUEST)
     })
@@ -214,6 +215,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserUpdateDtoByEmail(email));
     }
 
+    /**
     /**
      * Update {@link UserVO}.
      *
@@ -292,7 +294,7 @@ public class UserController {
     public ResponseEntity<HttpStatus> updateUserProfilePicture(
         @Parameter(description = "pass image as base64") @RequestPart(required = false) String base64,
         @Parameter(description = "Profile picture") @ImageValidation @RequestPart(required = false) MultipartFile image,
-        @ApiIgnore @AuthenticationPrincipal Principal principal) {
+        @ApiIgnore Principal principal) {
         String email = principal.getName();
         userService.updateUserProfilePicture(image, email, base64);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -449,17 +451,21 @@ public class UserController {
     @GetMapping("/findUserForManagement")
     @ApiPageable
     public ResponseEntity<PageableAdvancedDto<UserManagementDto>> findUserForManagementByPage(
-        @ApiIgnore Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findUserForManagementByPage(pageable));
+            @ApiIgnore Pageable pageable) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.findUserForManagementByPage(pageable));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     /**
-     * Method that allow you to find {@link UserVO} by Id.
+     * Method that allow you to find {@link UserVO} by query.
      *
      * @return {@link UserUpdateDto}.
      * @author Orest Mamchuk
      */
-    @Operation(summary = "Get User by id")
+    @Operation(summary = "Get User by query")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = HttpStatuses.OK),
         @ApiResponse(responseCode = "400", description = HttpStatuses.BAD_REQUEST),
@@ -481,7 +487,11 @@ public class UserController {
      * @author Orest Mamchuk
      */
     @Operation(summary = "update via UserManagement")
-    @ApiResponses(value = @ApiResponse(responseCode = "401", description = HttpStatuses.UNAUTHORIZED))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = HttpStatuses.UNAUTHORIZED),
+            @ApiResponse(responseCode = "403", description = HttpStatuses.FORBIDDEN),
+            @ApiResponse(responseCode = "404", description = HttpStatuses.NOT_FOUND)
+    })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateUserManagement(
@@ -531,7 +541,7 @@ public class UserController {
      * @return {@link Long}.
      * @author Orest Mamchuk
      */
-    @Operation(summary = "Get User by id")
+    @Operation(summary = "Get User id by email")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = HttpStatuses.OK),
         @ApiResponse(responseCode = "400", description = HttpStatuses.BAD_REQUEST),
@@ -574,10 +584,11 @@ public class UserController {
      */
     @Operation(summary = "Deactivate user indicating the list of reasons for deactivation")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = HttpStatuses.OK),
-        @ApiResponse(responseCode = "400", description = HttpStatuses.BAD_REQUEST),
-        @ApiResponse(responseCode = "401", description = HttpStatuses.UNAUTHORIZED),
-        @ApiResponse(responseCode = "403", description = HttpStatuses.FORBIDDEN)
+            @ApiResponse(responseCode = "200", description = HttpStatuses.OK),
+            @ApiResponse(responseCode = "400", description = HttpStatuses.BAD_REQUEST),
+            @ApiResponse(responseCode = "401", description = HttpStatuses.UNAUTHORIZED),
+            @ApiResponse(responseCode = "403", description = HttpStatuses.FORBIDDEN),
+            @ApiResponse(responseCode = "404", description = HttpStatuses.NOT_FOUND)
     })
     @PutMapping("/deactivate")
     public ResponseEntity<ResponseEntity.BodyBuilder> deactivateUser(@RequestParam Long id,
@@ -640,7 +651,7 @@ public class UserController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = HttpStatuses.OK),
         @ApiResponse(responseCode = "400", description = HttpStatuses.BAD_REQUEST),
-        @ApiResponse(responseCode = "403", description = HttpStatuses.FORBIDDEN)
+        @ApiResponse(responseCode = "401", description = HttpStatuses.UNAUTHORIZED)
     })
     @PutMapping("/language/{languageId}")
     public ResponseEntity<Object> setUserLanguage(@ApiIgnore @CurrentUser UserVO userVO,
@@ -704,7 +715,11 @@ public class UserController {
     })
     @PostMapping()
     public ResponseEntity<UserVO> saveUser(@RequestBody @CurrentUser UserVO userVO) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.save(userVO));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.save(userVO));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     /**

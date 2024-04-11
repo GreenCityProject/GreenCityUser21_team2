@@ -95,10 +95,10 @@ public class SecurityConfig {
                         new AccessTokenAuthenticationFilter(jwtTool, authenticationManager(), userService),
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint((req, resp, exc) -> resp.sendError(
-                                SC_UNAUTHORIZED, "Authorize first."))
-                        .accessDeniedHandler((req, resp, exc) -> resp.sendError(
-                                SC_FORBIDDEN, "You don't have authorities.")))
+                        .authenticationEntryPoint((req, resp, exc) -> resp.setStatus(
+                                SC_UNAUTHORIZED))
+                        .accessDeniedHandler((req, resp, exc) -> resp.setStatus(
+                                SC_FORBIDDEN)))
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/static/css/**", "/static/img/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -136,7 +136,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, USER_LINK,
                                 "/user/shopping-list-items/habits/{habitId}/shopping-list",
                                 "/user/{userId}/{habitId}/custom-shopping-list-items/available",
-                                "/user/{userId}/profile/", "/user/isOnline/{userId}/",
+                                "/user/{userId}/profile/",
                                 "/user/{userId}/profileStatistics/",
                                 "/user/userAndSixFriendsWithOnlineStatus",
                                 "/user/userAndAllFriendsWithOnlineStatus",
@@ -155,11 +155,14 @@ public class SecurityConfig {
                                 "/ownSecurity/password-status",
                                 "/user/emailNotifications")
                         .hasAnyRole(USER, ADMIN, UBS_EMPLOYEE, MODERATOR, EMPLOYEE)
+                        .requestMatchers(HttpMethod.GET, "/user/isOnline/{userId}/")
+                        .hasAnyRole(ADMIN, UBS_EMPLOYEE, MODERATOR, EMPLOYEE)
                         .requestMatchers(HttpMethod.POST, USER_LINK,
                                 "/user/shopping-list-items",
                                 "/user/{userId}/habit",
                                 "/ownSecurity/set-password",
                                 "/email/sendReport",
+                                "/email/sendUserViolation",
                                 "/email/sendHabitNotification",
                                 "/email/addEcoNews",
                                 "/email/changePlaceStatus",

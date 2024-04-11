@@ -2,6 +2,7 @@ package greencity.filters;
 
 import greencity.dto.user.UserManagementViewDto;
 import greencity.entity.User;
+import greencity.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,8 @@ class UserSpecificationTest {
     @Mock
     private Path<Object> objectPathExpected;
     @Mock
-    private Expression<Integer> as;
+    private Expression<String> as;
+
     List<SearchCriteria> searchCriteriaList;
     UserSpecification userSpecification;
 
@@ -42,7 +44,7 @@ class UserSpecificationTest {
             .name("test")
             .email("test@ukr.net")
             .userCredo("test")
-            .role("1")
+            .role(Role.ROLE_USER.name())
             .userStatus("2")
             .build();
         searchCriteriaList.add(SearchCriteria.builder()
@@ -100,12 +102,11 @@ class UserSpecificationTest {
         when(criteriaBuilder.and(expected, expected)).thenReturn(expected);
         when(criteriaBuilder.conjunction()).thenReturn(expected);
         when(root.get(searchCriteriaList.get(4).getKey())).thenReturn(objectPathExpected);
-        when(objectPathExpected.as(Integer.class)).thenReturn(as);
+        when(objectPathExpected.as(String.class)).thenReturn(as);
         when(criteriaBuilder.equal(as, searchCriteriaList.get(4).getValue())).thenReturn(expected);
         when(criteriaBuilder.and(expected, expected)).thenReturn(expected);
         when(criteriaBuilder.conjunction()).thenReturn(expected);
         when(root.get(searchCriteriaList.get(5).getKey())).thenReturn(objectPathExpected);
-        when(objectPathExpected.as(Integer.class)).thenReturn(as);
         when(criteriaBuilder.equal(as, searchCriteriaList.get(5).getValue())).thenReturn(expected);
         when(criteriaBuilder.and(expected, expected)).thenReturn(expected);
         Predicate actual = userSpecification.toPredicate(root, criteriaQuery, criteriaBuilder);
