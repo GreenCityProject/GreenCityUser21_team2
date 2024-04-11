@@ -13,6 +13,7 @@ public final class AppConstant {
     public static final Double DEFAULT_RATING = 0.0;
     public static final String IMAGE = "image";
     public static final String DEFAULT_LANGUAGE_CODE = "en";
+    public static final String UKRAINIAN_LANGUAGE_CODE = "ua";
     public static final String PASSWORD = "password";
     public static final String USER_STATUS = "user_status";
 

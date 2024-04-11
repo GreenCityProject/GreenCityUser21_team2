@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import greencity.security.filters.AccessTokenAuthenticationFilter;
+import greencity.security.handler.CustomSuccessHandler;
 import greencity.security.jwt.JwtTool;
 import greencity.security.providers.JwtAuthenticationProvider;
 import greencity.service.UserService;
@@ -44,6 +45,7 @@ public class SecurityConfig {
     private final UserService userService;
     private static final String USER_LINK = "/user";
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomSuccessHandler handler;
 
     /**
      * Constructor.
@@ -51,10 +53,11 @@ public class SecurityConfig {
 
     @Autowired
     public SecurityConfig(JwtTool jwtTool, UserService userService,
-                          AuthenticationConfiguration authenticationConfiguration) {
+                          AuthenticationConfiguration authenticationConfiguration,CustomSuccessHandler handler) {
         this.jwtTool = jwtTool;
         this.userService = userService;
         this.authenticationConfiguration = authenticationConfiguration;
+        this.handler = handler;
     }
 
     /**
@@ -221,7 +224,12 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.PUT, "/user/user-rating")
                         .hasAnyRole(ADMIN, MODERATOR, EMPLOYEE, UBS_EMPLOYEE, USER)
-                        .anyRequest().hasAnyRole(ADMIN));
+                        .anyRequest().hasAnyRole(ADMIN))
+                .oauth2Login(auth2LoginConfigurer -> auth2LoginConfigurer
+                        .loginPage("/login")
+                        .successHandler(handler)
+                );
+
         return http.build();
     }
 
